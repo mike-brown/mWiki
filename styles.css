@@ -1,0 +1,102 @@
+html
+{
+  background-color: grey;
+}
+
+body
+{
+	font-family: sans-serif;
+	font-size: 14px;
+  width: 740px;
+  border: thin black solid;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  
+}
+
+#header
+{
+  font-size: 30px;
+  font-weight: bold;
+  padding: 10px;
+  margin: 10px;
+  border: ridge 3px grey;
+}
+
+#inner_content
+{
+  padding: 0px 40px;
+  margin: 10px 0px;
+}
+
+#inner_content p, #inner_content a
+{
+	line-height: 140%;
+  margin: 0px 0px 10px 0px;
+}
+
+#inner_content ul
+{
+  margin-left: 20px;
+}
+
+h2
+{
+	margin: 10px;
+}
+
+#infobox
+{
+	float: right;
+	width: 280px;
+	border: 2px solid black;
+	padding: 10px;
+	right: 0px;
+	top: 0px;
+	margin: 0px 10px 10px 10px;
+}
+
+#infobox dd
+{
+	position: relative;
+	top: -16px;
+	right: 0px;
+	width: auto;
+	text-align: right;
+}
+
+#infobox dl
+{	
+	margin: 0px;
+	margin-bottom: -16px;
+}
+
+#infobox dt
+{
+	width: 100px;
+	font-weight: bold;
+}
+
+#categories
+{
+	border: 1px solid black;
+	padding: 0px;
+	margin: 0px 30px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+#categories ul
+{
+	padding-left: 10px;
+}
+
+#categories li
+{
+	display: inline;
+	margin-right: 10px;
+	padding-right: 10px;
+	list-style-type:none;
+}
