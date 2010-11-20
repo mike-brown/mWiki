@@ -1,0 +1,15 @@
+INFO
+|Item 1=Foo
+|Item 2=Bar
+|Item 3=Baz
+|Link=[Main page][1]
+ENDINFO
+
+Infobox
+=======
+
+Infoboxes allow for the summerisation of data into a small table, which will display in a consistant
+fashion.
+
+
+[1]: #Main

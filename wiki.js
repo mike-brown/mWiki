@@ -93,7 +93,7 @@ function loadPage(href)
 
                 // Post-convert parsing
                 data = postParse(data);
-                
+
                 // Push the content to the page
                 var content = data;
                 $('#inner_content').html(content);
@@ -152,8 +152,11 @@ function postParse(data)
 
       for(var i in info_data)
       {
-          temp_matches = info_data[i].match(/^\|(\w+)\=(.*)$/);
-          info_matches.push("<dt>" + temp_matches[1] + "</dt><dd>" + temp_matches[2] + "</dd>");
+          temp_matches = info_data[i].match(/^\|([^=]+)\=(.*)$/);
+          if(temp_matches != null)
+          {
+            info_matches.push("<dt>" + temp_matches[1] + "</dt><dd>" + temp_matches[2] + "</dd>");
+          }
       }
 
       // Update the infobox template
@@ -163,31 +166,31 @@ function postParse(data)
   {
       $("#infobox").hide().html("");
   }
-  
+
   // Parse out the class spans
   // Look for !!(class){...}
   var class_span_matches = data.match(/!!([^!]+)\{([^\}]+)\}/mg);
   var inner_match;
-  
+
   for(var x in class_span_matches)
   {
     inner_match = class_span_matches[x].match(/!!([^!]+)\{([^\}]+)\}/);
-    
+
     data = data.replace("!!"+inner_match[1]+"{"+inner_match[2]+"}", '<span class="'+inner_match[1]+'">'+inner_match[2]+'</span>');
   }
-  
+
   // Parse out the colour spans
   // Look for !!(colour){...}
   var colour_span_matches = data.match(/!!!([^!]+)\{([^\}]+)\}/mg);
   var inner_match;
-  
+
   for(var x in colour_span_matches)
   {
     inner_match = colour_span_matches[x].match(/!!([^!]+)\{([^\}]+)\}/);
-    
+
     data = data.replace("!!!"+inner_match[1]+"{"+inner_match[2]+"}", '<span style="color:'+inner_match[1]+';">'+inner_match[2]+'</span>');
   }
-  
+
   return data;
 }
 
