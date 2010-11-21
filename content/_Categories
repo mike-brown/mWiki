@@ -1,1 +1,17 @@
-This is the content of a category page, listing details about the category.
+Categories
+==========
+
+Categories are used to group similar pages together. Categories can belong to other categories,
+giving a hierachical structure. Categoriescan also have their own content, such as this.
+
+Usage
+-----
+
+Categories are made up of two parts: the listing of categories for a given page, and the content of
+a category itself.
+
+The list of of categories that a page belongs to are placed in a file under the 'categories' folder,
+with the file named the same as the page. This file should contain a simple listing of the text
+label for the category and the location of it, one per line. The format of each line is
+<label>#url.
+

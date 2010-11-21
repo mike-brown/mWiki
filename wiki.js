@@ -58,18 +58,16 @@ function loadPage(href)
                             var links = listing.match(/(.+)/g);
                             var category_listing = '';
                             var link = '';
+                            var matches = [];
 
                             for(var x in links)
                             {
                                 link = links[x];
-                                if(link.match(/category:(.*)/))
+                                matches = link.match(/^([^#]+)#(.+)$/)
+
+                                if(matches.length != 0)
                                 {
-                                    // This is another category link so just include
-                                    category_listing = category_listing + '\n' + links[x];
-                                }
-                                else
-                                {
-                                    category_listing = category_listing + '\n[' + links[x] + '](#' + links[x] + ')';
+                                    category_listing = category_listing + '\n[' + matches[1] + '](#' + matches[2] + ')';
                                 }
                             }
 
