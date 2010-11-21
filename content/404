@@ -3,4 +3,6 @@
 
 This is the content of the 404 page, and is displayed any time a page of requested content is not found.
 
-For usability, 
+For usability, there should always be a link back to the [Main page][1] somewhere.
+
+[1]: #Main
