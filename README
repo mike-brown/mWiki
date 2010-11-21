@@ -1,3 +1,0 @@
-mWiki is a miniature, portable wiki software driven by a Javascript backend and rendered through HTML, with Markdown <http://daringfireball.net/projects/markdown/> providing the content syntax.
-
-Showdown <http://attacklab.net/showdown/> is used to convert the Markdown into the content HTML. JQuery <http://jquery.com/> is used to make the manipulation of the page elements easier. The Meyerweb Reset CSS <http://meyerweb.com/eric/tools/css/reset/> was used to ease the creation of the page styling.
