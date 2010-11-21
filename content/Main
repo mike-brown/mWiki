@@ -1,7 +1,10 @@
-This is the static first page of the wiki software. Along with the 404 page, these are the only two that are hand-coded into the wiki.js file. All other pages are loaded through the #<name> part of the current URL.
+This is the static first page of the wiki software. Along with the 404 page, these are the only two
+that are hand-coded into the wiki.js file. All other pages are loaded through the anchor (#name)
+part of the current URL.
 
 [Categories][1]
 
+[Infobox][2]
 
 [1]: #category:Categories
 [2]: #category:Infobox
