@@ -11,5 +11,16 @@ Infobox
 Infoboxes allow for the summerisation of data into a small table, which will display in a consistant
 fashion.
 
+Definition
+----------
+
+Infoboxes are defined between regions, starting with the token INFO and continuing until an ENDINFO
+token is reached. Both of these tokens should be on a line of its own.
+
+Between the INFO/ENDINFO tokens are lines that map keys to values. Each of the lines is in the form
+|<key>=<value>, where the key is any text delimited by the | symbol and the = symbol, and the value
+is delimited by the = symbol and the line end.
+
+As seen in the example on this page, links are processed in the usual manner.
 
 [1]: #Main
