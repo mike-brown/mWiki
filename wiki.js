@@ -21,109 +21,117 @@ function loadPage(href)
         }
     }
 
-    // If this is a category url, replace 'category:' with '_'
-    if(url.match(/category:/))
+    // If this is an admin url, use that function to parse
+    if(url.match(/admin:/))
     {
-        url = url.replace(/category:/, '_');
+        admin(url);
     }
-
-    $.ajax(
+    else
     {
-        url: 'content/' + escape(url),
-        success: function(data)
+        // If this is a category url, replace 'category:' with '_'
+        if(url.match(/category:/))
         {
-            // First, check if the page is a redirect
-            var redirect_match = data.match(/^REDIRECT: #(.+)$/);
-            if(redirect_match)
-            {
-                window.location = window.location.href.replace(/index\.html#.+$/, "index.html#" + redirect_match[1]);
-                return;
-            }
-
-            var converter = new Showdown.converter();
-            var content_section = $('#inner_content');
-
-            content_section.fadeOut('fast', function()
-            {
-                // If this is a category page, we need to add in the links
-                if(url.match(/_(.+)/g))
-                {
-                    $.ajax(
-                    {
-                        // Need to be synchronous to block the function below (outside the previous if)
-                        async: false,
-                        url: 'categories/' + escape(url.substring(1)),
-                        success: function(listing)
-                        {
-                            var links = listing.match(/(.+)/g);
-                            var category_listing = '';
-                            var link = '';
-                            var matches = [];
-
-                            for(var x in links)
-                            {
-                                link = links[x];
-                                matches = link.match(/^([^#]+)#(.+)$/)
-
-                                if(matches.length != 0)
-                                {
-                                    category_listing = category_listing + '\n[' + matches[1] + '](#' + matches[2] + ')';
-                                }
-                            }
-
-                            data = data + '\n' + category_listing;
-                        }
-                    });
-                }
-
-                // Parse out the category links
-                var categories = data.match(/^category\:(.+)$/gm);
-                data = data.replace(/^category\:(.+)$/gm, '');
-
-                // Preprocess all the referenced links to replace space with %20
-                data = data.replace(/^(\[\d+\]\: #)(.+)$/gm, function(match, m1, m2)
-                {
-                    return m1+m2.replace(/\s+/g, "%20");
-                });
-
-                // Convert to html
-                data = converter.makeHtml(data);
-
-                // Post-convert parsing
-                data = postParse(data);
-
-                // Push the content to the page
-                var content = data;
-                $('#inner_content').html(content);
-
-                var category_string = '';
-
-                for(var x in categories)
-                {
-                    category_string = category_string + '\r\n' + ' * ['+ categories[x].replace(/category:/, '') + '](#' + categories[x] + ')';
-                }
-
-                var converted_cat = converter.makeHtml(category_string);
-
-                $('#categories').html(converted_cat);
-
-                if(converted_cat == '')
-                {
-                  $('#categories').hide();
-                }
-                else
-                {
-                  $('#categories').show();
-                }
-
-                content_section.fadeIn('fast');
-            });
-        },
-        error: function()
-        {
-            loadPage("404");
+            url = url.replace(/category:/, '_');
         }
-    });
+
+        $.ajax(
+        {
+            url: 'content/' + escape(url),
+            success: function(data)
+            {
+                // First, check if the page is a redirect
+                var redirect_match = data.match(/^REDIRECT: #(.+)$/);
+                if(redirect_match)
+                {
+                    window.location = window.location.href.replace(/index\.html#.+$/, "index.html#" + redirect_match[1]);
+                    return;
+                }
+
+                var converter = new Showdown.converter();
+                var content_section = $('#inner_content');
+
+                content_section.fadeOut('fast', function()
+                {
+                    // If this is a category page, we need to add in the links
+                    if(url.match(/_(.+)/g))
+                    {
+                        $.ajax(
+                        {
+                            // Need to be synchronous to block the function below (outside the previous if)
+                            async: false,
+                            url: 'categories/' + escape(url.substring(1)),
+                            success: function(listing)
+                            {
+                                var links = listing.match(/(.+)/g);
+                                var category_listing = '';
+                                var link = '';
+                                var matches = [];
+
+                                for(var x in links)
+                                {
+                                    link = links[x];
+                                    matches = link.match(/^([^#]+)#(.+)$/)
+
+                                    if(matches.length != 0)
+                                    {
+                                        category_listing = category_listing + '\n[' + matches[1] + '](#' + matches[2] + ')';
+                                    }
+                                }
+
+                                data = data + '\n' + category_listing;
+                            }
+                        });
+                    }
+
+                    // Parse out the category links
+                    var categories = data.match(/^category\:(.+)$/gm);
+                    data = data.replace(/^category\:(.+)$/gm, '');
+
+                    // Preprocess all the referenced links to replace space with %20
+                    data = data.replace(/^(\[\d+\]\: #)(.+)$/gm, function(match, m1, m2)
+                    {
+                        return m1+m2.replace(/\s+/g, "%20");
+                    });
+
+                    // Convert to html
+                    data = converter.makeHtml(data);
+
+                    // Post-convert parsing
+                    data = postParse(data);
+
+                    // Push the content to the page
+                    var content = data;
+                    $('#inner_content').html(content);
+
+                    var category_string = '';
+
+                    for(var x in categories)
+                    {
+                        category_string = category_string + '\r\n' + ' * ['+ categories[x].replace(/category:/, '') + '](#' + categories[x] + ')';
+                    }
+
+                    var converted_cat = converter.makeHtml(category_string);
+
+                    $('#categories').html(converted_cat);
+
+                    if(converted_cat == '')
+                    {
+                      $('#categories').hide();
+                    }
+                    else
+                    {
+                      $('#categories').show();
+                    }
+
+                    content_section.fadeIn('fast');
+                });
+            },
+            error: function()
+            {
+                loadPage("404");
+            }
+        });
+    }
 }
 
 function postParse(data)
@@ -215,6 +223,46 @@ function doLoad()
 }
 doLoad();
 
+// This is the parser for admin functionality
+function admin(url)
+{
+    url = url.replace(/^admin\:/, '');
+
+    // Folder contains <name>.content and/or <name>.script
+    // Load the content through markdown first so that we can operate on it
+    // If the content isn't found, put in a standard message and ignore
+    // If the script isn't found, ignore
+    // If both are not found, give a 404
+
+    var content = 'There is no content for this admin page';
+    var converter = new Showdown.converter();
+
+    var base = 'admin/' + escape(url) + '/' + escape(url);
+
+    $.ajax(
+    {
+        url: base + '.content',
+        success: function(data)
+        {
+            content = data;
+        },
+        complete: function()
+        {
+            content = converter.makeHtml(content);
+            $('#inner_content').html(content);
+
+            $.ajax(
+            {
+                url: base + ".script",
+                success: function(data)
+                {
+                    eval(data);
+                }
+            });
+        }
+    });
+}
+
 
 
 // Searching
@@ -222,7 +270,6 @@ function search(term)
 {
 
 }
-
 
 function searchTitle(title)
 {
