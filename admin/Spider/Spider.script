@@ -1,6 +1,41 @@
-function foo()
+// Load the main page
+// return []
+function spider_load_page(page)
 {
-  alert("There");
+  var content = "";
+  var converter = new Showdown.converter();
+
+  $.ajax(
+  {
+    url: "content/" + page,
+    success: function(data)
+    {
+      content = converter.makeHtml(data);
+      return spider_find_links(content);
+    },
+    error: function(data)
+    {
+      return [];
+    }
+  });
 }
 
-foo();
+// Look for the links
+// return []
+function spider_find_links(content)
+{
+  // Find the a tags
+  alert("asdf");
+
+
+  //   /<a\s+href=\"\#([^\"]+)\"[^\>]*>[^\<]+</a>/g
+}
+
+
+// The main spider loop
+function spider_run()
+{
+  
+}
+
+spider_load_page("Main");
