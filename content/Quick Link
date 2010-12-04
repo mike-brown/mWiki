@@ -1,0 +1,10 @@
+Quick Link Template
+===================
+
+This template allows for a simple link to be defined.
+
+Usage
+=====
+
+[[Main]] is a quick link back to the main page. it is formed from \[\[*name*]], where *name* is the
+title of the page to link to.

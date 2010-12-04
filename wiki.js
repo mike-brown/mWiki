@@ -88,7 +88,10 @@ function loadPage(href)
 		    return m1+m2.replace(/\s+/g, "%20");
 		});
 
-		// Convert to html
+                // Pre-convert parsing
+		data = preParse(data);
+
+                // Convert to html
 		data = converter.makeHtml(data);
 
 		// Post-convert parsing

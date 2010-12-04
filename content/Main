@@ -2,9 +2,13 @@ This is the static first page of the wiki software. Along with the 404 page, the
 that are hand-coded into the wiki.js file. All other pages are loaded through the anchor (#name)
 part of the current URL.
 
-[Categories][1]
+Core functions
+--------------
 
-[Infobox][2]
+[[Categories]]
 
-[1]: #category:Categories
-[2]: #Infobox
+Templates
+---------
+
+* [[Infobox]]
+* [[Quick Link]]
