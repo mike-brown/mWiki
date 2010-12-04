@@ -1,5 +1,5 @@
-mWiki - Miniature, Portable Wiki Software
-=========================================
+mWiki - Miniature Wiki Software
+===============================
 
 Introduction
 ------------
