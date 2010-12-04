@@ -1,24 +1,26 @@
 var current_url = location.href;
 var page_updating = false;
 
+//  ******* CORE ******* \\
+// Load the given page of the wiki
 function loadPage(href)
 {
     // Default to the main page
     if(href == '')
     {
-        url = 'Main';
-        // Update the current url that the page is on
-        current_url = location.href.replace(/index\.html#?.+$/, "index.html#Main");
+	url = 'Main';
+	// Update the current url that the page is on
+	current_url = location.href.replace(/index\.html#?.+$/, "index.html#Main");
     }
     else
     {
-        url = unescape(href);
+	url = unescape(href);
 
-        // Update the current url that the page is on
-        if(href != '404')
-        {
-            current_url = location.href.replace(/index\.html#?.+$/, "index.html#" + href);
-        }
+	// Update the current url that the page is on
+	if(href != '404')
+	{
+	    current_url = location.href.replace(/index\.html#?.+$/, "index.html#" + href);
+	}
     }
 
     // If this is an admin url, use that function to parse
@@ -93,6 +95,9 @@ function loadPage(href)
                         return m1+m2.replace(/\s+/g, "%20");
                     });
 
+                    // Pre-convert parsing
+                    data = preParse(data);
+
                     // Convert to html
                     data = converter.makeHtml(data);
 
@@ -116,11 +121,11 @@ function loadPage(href)
 
                     if(converted_cat == '')
                     {
-                      $('#categories').hide();
+                        $('#categories').hide();
                     }
                     else
                     {
-                      $('#categories').show();
+                        $('#categories').show();
                     }
 
                     content_section.fadeIn('fast');
@@ -134,70 +139,26 @@ function loadPage(href)
     }
 }
 
+function preParse(data)
+{
+    // Parse out the quick links
+    data = templateQuickLinkParse(data);
+
+    return data;
+}
+
 function postParse(data)
 {
-  // Parse out the infobox
-  // Look for if there is an <p>INFO and ENDINFO</p>
-  var info_start = data.indexOf("<p>INFO");
-  var info_end = data.indexOf("ENDINFO</p>");
+    // Parse out the infobox
+    data = templateInfoboxParse(data);
 
-  if((info_start != -1) && (info_end != -1))
-  {
-      var info_data = data.substring(info_start, info_end + 11);
-      data = data.substring(info_end + 11);
+    // Parse out the class spans
+    data = templateClassSpanParse(data);
 
-      info_data = info_data.split(/[\r\n]/g);
+    // Parse out the colour spans
+    data = templateColourSpanParse(data);
 
-      // Discard the first and last items as these are the markers
-      info_data.pop();
-      info_data.shift();
-
-      // Find each of the info elements
-      var info_matches = new Array();
-      var temp_matches;
-
-      for(var i in info_data)
-      {
-          temp_matches = info_data[i].match(/^\|([^=]+)\=(.*)$/);
-          if(temp_matches != null)
-          {
-            info_matches.push("<dt>" + temp_matches[1] + "</dt><dd>" + temp_matches[2] + "</dd>");
-          }
-      }
-
-      // Update the infobox template
-      $("#infobox").html("<dl>" + info_matches.join('') + "</dl>").show();
-  }
-  else
-  {
-      $("#infobox").hide().html("");
-  }
-
-  // Parse out the class spans
-  // Look for !!(class){...}
-  var class_span_matches = data.match(/!!([^!]+)\{([^\}]+)\}/mg);
-  var inner_match;
-
-  for(var x in class_span_matches)
-  {
-    inner_match = class_span_matches[x].match(/!!([^!]+)\{([^\}]+)\}/);
-
-    data = data.replace("!!"+inner_match[1]+"{"+inner_match[2]+"}", '<span class="'+inner_match[1]+'">'+inner_match[2]+'</span>');
-  }
-
-  // Parse out the colour spans
-  // Look for !!(colour){...}
-  var colour_span_matches = data.match(/!!!([^!]+)\{([^\}]+)\}/mg);
-  var inner_match;
-
-  for(var x in colour_span_matches)
-  {
-    inner_match = colour_span_matches[x].match(/!!([^!]+)\{([^\}]+)\}/);
-
-    data = data.replace("!!!"+inner_match[1]+"{"+inner_match[2]+"}", '<span style="color:'+inner_match[1]+';">'+inner_match[2]+'</span>');
-  }
-
-  return data;
+    return data;
 }
 
 setInterval('checkURLChange()', 200);
@@ -205,7 +166,7 @@ function checkURLChange()
 {
     if(current_url != location.href && !page_updating)
     {
-        doLoad();
+	doLoad();
     }
 }
 function doLoad()
@@ -213,11 +174,11 @@ function doLoad()
     page_updating = true;
     if(location.href.toString().indexOf('#') == -1)
     {
-        loadPage('');
+	loadPage('');
     }
     else
     {
-        loadPage(location.href.split('#')[1]);
+	loadPage(location.href.split('#')[1]);
     }
     page_updating = false;
 }
@@ -264,8 +225,95 @@ function admin(url)
 }
 
 
+//  ******* TEMPLATES ******* \\
 
-// Searching
+// Parse out the quick link syntax
+// Convert [[foo]] to [foo](#foo)
+function templateQuickLinkParse(data)
+{
+    return data.replace(/\[\[([^\]]+)\]\]/g, "[$1](#$1)");
+}
+
+// Parse out the infobox
+// Convert <p>INFO and ENDINFO</p> into the infobox pattern
+function templateInfoboxParse(data)
+{
+    var info_start = data.indexOf("<p>INFO");
+    var info_end = data.indexOf("ENDINFO</p>");
+
+    if((info_start != -1) && (info_end != -1))
+    {
+        var info_data = data.substring(info_start, info_end + 11);
+        data = data.substring(info_end + 11);
+
+        info_data = info_data.split(/[\r\n]/g);
+
+        // Discard the first and last items as these are the markers
+        info_data.pop();
+        info_data.shift();
+
+        // Find each of the info elements
+        var info_matches = new Array();
+        var temp_matches;
+
+        for(var i in info_data)
+        {
+            temp_matches = info_data[i].match(/^\|([^=]+)\=(.*)$/);
+            if(temp_matches != null)
+            {
+                info_matches.push("<dt>" + temp_matches[1] + "</dt><dd>" + temp_matches[2] + "</dd>");
+            }
+        }
+
+        // Update the infobox template
+        $("#infobox").html("<dl>" + info_matches.join('') + "</dl>").show();
+    }
+    else
+    {
+        $("#infobox").hide().html("");
+    }
+
+    return data;
+}
+
+// Parse out the class spans
+// Convert the !!(class){...} syntax to inline class attributes
+function templateClassSpanParse(data)
+{
+    // Look for !!(class){...}
+    var class_span_matches = data.match(/!!([^!]+)\{([^\}]+)\}/mg);
+    var inner_match;
+
+    for(var x in class_span_matches)
+    {
+	inner_match = class_span_matches[x].match(/!!([^!]+)\{([^\}]+)\}/);
+
+	data = data.replace("!!"+inner_match[1]+"{"+inner_match[2]+"}", '<span class="'+inner_match[1]+'">'+inner_match[2]+'</span>');
+    }
+
+    return data;
+}
+
+// Parse out the colour spans
+// Convert the !!(colour){...} syntax to inline style attribute
+function templateColourSpanParse(data)
+{
+    // Look for !!(colour){...}
+    var colour_span_matches = data.match(/!!!([^!]+)\{([^\}]+)\}/mg);
+    var inner_match;
+
+    for(var x in colour_span_matches)
+    {
+        inner_match = colour_span_matches[x].match(/!!([^!]+)\{([^\}]+)\}/);
+
+        data = data.replace("!!!"+inner_match[1]+"{"+inner_match[2]+"}", '<span style="color:'+inner_match[1]+';">'+inner_match[2]+'</span>');
+    }
+
+    return data;
+}
+
+//  ******* SEARCH ******* \\
+
 function search(term)
 {
 

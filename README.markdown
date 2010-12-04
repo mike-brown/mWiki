@@ -1,5 +1,5 @@
-mWiki - Miniature, Portable Wiki Software
-=========================================
+mWiki - Miniature Wiki Software
+===============================
 
 Introduction
 ------------
@@ -26,7 +26,7 @@ However, mWiki lacks the following things that you see in other wiki software:
 
 * Versioning (can be replicated through use of VCS)
 * Searching (planned for the future)
-* Templates (a simple Infobox is available; more possible in the future)
+* Templates (a few are available, with more planned)
 * Users and permissions (not possible, save for permissions to network shares and the like)
 * Live, inline editing (not possible; javascript has no access to the filesystem)
 
@@ -96,4 +96,4 @@ Copyright
 
 Copyright (c) 2010 Mike Brown. See LICENSE for details.
 
-JQuery is (c) The Jquery Project
+JQuery is (c) The JQuery Project
