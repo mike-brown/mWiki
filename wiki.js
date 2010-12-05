@@ -1,5 +1,6 @@
 var current_url = location.href;
 var page_updating = false;
+var converter = new Showdown.converter();
 
 //  ******* CORE ******* \\
 // Load the given page of the wiki
@@ -42,7 +43,6 @@ function loadPage(href)
 		return;
 	    }
 
-	    var converter = new Showdown.converter();
 	    var content_section = $('#inner_content');
 
 	    content_section.fadeOut('fast', function()
@@ -88,14 +88,8 @@ function loadPage(href)
 		    return m1+m2.replace(/\s+/g, "%20");
 		});
 
-                // Pre-convert parsing
-		data = preParse(data);
-
-                // Convert to html
-		data = converter.makeHtml(data);
-
-		// Post-convert parsing
-		data = postParse(data);
+                // Parse the data
+                data = parseContent(data)
 
 		// Push the content to the page
 		var content = data;
@@ -149,6 +143,20 @@ function postParse(data)
 
     // Parse out the colour spans
     data = templateColourSpanParse(data);
+
+    return data;
+}
+
+function parseContent(data)
+{
+    // Pre-convert parsing
+    data = preParse(data);
+
+    // Convert to html
+    data = converter.makeHtml(data);
+
+    // Post-convert parsing
+    data = postParse(data);
 
     return data;
 }
