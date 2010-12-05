@@ -24,10 +24,18 @@ function spider_load_page(page)
 // return []
 function spider_find_links(content)
 {
+  var pages = [];
+  var links = [];
+
   // Find the a tags
-  alert("asdf");
+  links = content.match(/\<a href=\"\#([^\"]+)"\>[^\<]+\<\/a\>/g);
 
+  for(var i = 0; i < links.length; i++)
+  {
+    pages.push(links[i].match(/\<a href=\"\#([^\"]+)"\>[^\<]+\<\/a\>/)[1]);
+  }
 
+  alert(pages.length);
   //   /<a\s+href=\"\#([^\"]+)\"[^\>]*>[^\<]+</a>/g
 }
 
@@ -35,7 +43,7 @@ function spider_find_links(content)
 // The main spider loop
 function spider_run()
 {
-  
+
 }
 
 spider_load_page("Main");
