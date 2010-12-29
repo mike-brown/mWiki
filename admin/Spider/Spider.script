@@ -10,7 +10,7 @@ function spider_load_page(page)
     url: "content/" + page,
     success: function(data)
     {
-      content = converter.makeHtml(data);
+      content = parseContent(data);
       return spider_find_links(content);
     },
     error: function(data)
