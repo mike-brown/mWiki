@@ -1,0 +1,32 @@
+Categories
+==========
+
+Categories are used to group similar pages together. Categories can belong to other categories,
+giving a hierachical structure. Categories can also have their own content, such as shown on the
+[Categories][1] category page.
+
+Categories are used in two ways: to add a page of content or a sub-category into a category, and
+to control the content of the category itself.
+
+Adding a page to a category
+---------------------------
+
+To add a given page into a category, you need to add a line to the content document for each
+category that the page is a member of. This line is in the form of:
+
+!!CODE
+*category:{Name}*
+!!ENDCODE
+
+where {Name} is the name of the category to add the page to. There should be nothing but this
+definition on the line
+
+The link can appear at any point in the document, but are generally grouped. However, this also
+means that templates can be used to add pages to categories automatically.
+
+Defining a category
+-------------------
+
+
+
+[1]: #category:Categories

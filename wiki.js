@@ -4,34 +4,28 @@ var converter = new Showdown.converter();
 
 //  ******* CORE ******* \\
 // Load the given page of the wiki
-function loadPage(href)
-{
+function loadPage(href) {
     // Default to the main page
-    if(href == '')
-    {
+    if(href == '') {
 	url = 'Main';
 	// Update the current url that the page is on
 	current_url = location.href.replace(/index\.html#?.+$/, "index.html#Main");
     }
-    else
-    {
+    else {
 	url = unescape(href);
 
 	// Update the current url that the page is on
-	if(href != '404')
-	{
+	if(href != '404') {
 	    current_url = location.href.replace(/index\.html#?.+$/, "index.html#" + href);
 	}
     }
 
     // If this is a category url, replace 'category:' with '_'
-    if(url.match(/category:/))
-    {
+    if(url.match(/category:/)) {
 	url = url.replace(/category:/, '_');
     }
 
-    $.ajax(
-    {
+    $.ajax({
 	url: 'content/' + escape(url),
 	success: function(data)
 	{
@@ -43,8 +37,10 @@ function loadPage(href)
 		return;
 	    }
 
+            // Find the content section
 	    var content_section = $('#inner_content');
 
+            // Fade out the current content, and when finished load the next
 	    content_section.fadeOut('fast', function()
 	    {
 		// If this is a category page, we need to add in the links
@@ -85,7 +81,7 @@ function loadPage(href)
 		// Preprocess all the referenced links to replace space with %20
 		data = data.replace(/^(\[\d+\]\: #)(.+)$/gm, function(match, m1, m2)
 		{
-		    return m1+m2.replace(/\s+/g, "%20");
+		    return m1 + m2.replace(/\s+/g, "%20");
 		});
 
                 // Parse the data
@@ -189,8 +185,7 @@ doLoad();
 
 // Parse out the quick link syntax
 // Convert [[foo]] to [foo](#foo)
-function templateQuickLinkParse(data)
-{
+function templateQuickLinkParse(data) {
     return data.replace(/\[\[([^\]]+)\]\]/g, "[$1](#$1)");
 }
 

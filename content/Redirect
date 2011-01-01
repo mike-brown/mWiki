@@ -3,3 +3,12 @@ Page Redirect
 
 To have a page redirect to another (for the purposes of article aliases), you can use the REDIRECT
 keyword.
+
+Usage
+-----
+
+The file to redirect from must contain a single line of the instruction to redirect, in the form:
+
+REDIRECT: #**page_name**
+
+where **page_name** is the name of the page to redirect to.
