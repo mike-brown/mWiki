@@ -12,8 +12,11 @@ this.Wiki = {};
     // ******* CORE ******* \\
     // Load the given page of the wiki
     Wiki.loadPage = function(href) {
-        // The url to with
+        // The url to work with
         var url = "";
+
+        // The page type
+        var type = "";
 
         // Default to the main page
         if(href == '') {
@@ -31,13 +34,20 @@ this.Wiki = {};
             }
         }
 
-        // If this is a category url, replace 'category:' with '_'
+        // If this is a category url, look under the categories folder
         if(url.match(/category:/)) {
-            url = url.replace(/category:/, '_');
+            url = "categories/" + url.replace(/category:/, '');
+            type = "category";
+        }
+        else {
+            // Look under the content folder
+            url = "content/" + url;
+            type = "content";
         }
 
+        // Now do the parsing work
         $.ajax({
-            url: 'content/' + escape(url),
+            url: escape(url),
             success: function(data)
             {
                 // First, check if the page is a redirect
@@ -47,45 +57,26 @@ this.Wiki = {};
                     return;
                 }
 
+                // Now we know we have a page to load, we grab the categories data
+                categories_listing = Wiki.fetchCategories(url);
+
                 // Find the content section
                 var content_section = $('#inner_content');
 
                 // Fade out the current content, and when finished load the next
                 content_section.fadeOut('fast', function() {
-                    // If this is a category page, we need to add in the links
-                    if(url.match(/_(.+)/g)) {
-                        $.ajax({
-                            // Need to be synchronous to block the function below (outside the previous if)
-                            async: false,
-                            url: 'categories/' + escape(url.substring(1)),
-                            success: function(listing) {
-                                var links = listing.match(/(.+)/g);
-                                var category_listing = '';
-                                var link = '';
-                                var matches = [];
+                    // If this is a category, we need to list the child pages
+                    if(type === "category") {
+                        data = data + "\r\n"
 
-                                for(var x in links) {
-                                    link = links[x];
-                                    matches = link.match(/^([^#]+)#(.+)$/)
-
-                                    if(matches.length != 0) {
-                                        category_listing = category_listing + '\n[' + matches[1] + '](#' + matches[2] + ')';
-                                    }
-                                }
-
-                                data = data + '\n' + category_listing;
-                            }
-                        });
+                        for(var x in categories_listing[0]) {
+                            data = data + '\r\n' + ' * ' + categories_listing[0][x];
+                        }
                     }
 
-                    // Parse out the category links
-                    var categories = data.match(/^category\:(.+)$/gm);
+                    // TODO: Either remove, or us to ensure expected categories
+                    // Parse out the category links, so that they can be notes for now
                     data = data.replace(/^category\:(.+)$/gm, '');
-
-                    // Preprocess all the referenced links to replace space with %20
-                    data = data.replace(/^(\[\d+\]\: #)(.+)$/gm, function(match, m1, m2) {
-                        return m1 + m2.replace(/\s+/g, "%20");
-                    });
 
                     // Parse the data
                     data = Wiki.parseContent(data)
@@ -96,8 +87,8 @@ this.Wiki = {};
 
                     var category_string = '';
 
-                    for(var x in categories) {
-                        category_string = category_string + '\r\n' + ' * ['+ categories[x].replace(/category:/, '') + '](#' + categories[x] + ')';
+                    for(var x in categories_listing[1]) {
+                        category_string = category_string + '\r\n' + ' * ' + categories_listing[1][x];
                     }
 
                     var converted_cat = Wiki.converter.makeHtml(category_string);
@@ -120,7 +111,121 @@ this.Wiki = {};
         });
     }
 
+    // Fetches the category data for this url
+    // If the page is content, fetches the categories it belongs to
+    // If the page is a category, fetches in addition its child pages and categories
+    Wiki.fetchCategories = function(url){
+        // The type of content to look for
+        var type = "";
+        var lookup = "";
+
+        // Data to return
+        var to_return = [[], []];
+
+        // Find out if this is a category or a content page
+        var match = url.match(/^(categories|content)\/(.+)$/);
+
+        // If there was no match, bail out
+        if(match === null) {
+            return to_return;
+        }
+
+        // Match, get the types
+        type = match[1];
+        lookup = match[2];
+
+        // Parse the categories.yml, looking for the needed data
+        $.ajax({
+            url: "categories.yml",
+            async: false,
+            success: function(data) {
+                // Split the data by the newlines
+                data = data.split(/\n/);
+
+                // Loop variables
+                var i = 0;
+                var index_data = null;
+                var data_match = null;
+
+                // If this is a category, look for the matching heading (no indent)
+                if(type === "categories") {
+                    var index_of_cat = data.indexOf(lookup + ":");
+
+                    // Only do something if there is an index found
+                    if(index_of_cat !== null) {
+                        // Now we look for array entries with indenting
+                        for(i = index_of_cat + 1; i < data.length; i++) {
+                            // Get the data
+                            index_data = data[i];
+
+                            // Check if it has indentation
+                            data_match = index_data.match(/^\s+(.*)$/);
+
+                            // If there was no match, we break from the loop
+                            if(data_match == null)
+                            {
+                                break;
+                            }
+                            else {
+                                // There is data here, so build a link to it
+                                data_match = data_match[1];
+
+                                // If the data begins with !, it's a category page
+                                if(data_match[0] === "!") {
+                                    to_return[0].push("[" + data_match.substring(1) + "](#category:" + data_match.substring(1) + ")");
+                                }
+                                else {
+                                    to_return[0].push("[" + data_match + "](#" + data_match + ")");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // For either category or content, find the categories that have this as an entry
+                // If this is a category, change the lookup to have the ! on the front
+                if(type === "categories") {
+                    lookup = "!" + lookup;
+                }
+
+                // Convert to a RegExp
+                var lookup_re = new RegExp("^\\s+(" + lookup + ")");
+
+                // Loop variables
+                var current_cat = "";
+
+                // Step through the array, finding the categories and adding them to the return array as needed
+                for(i = 0; i < data.length; i++) {
+                    // Get the data
+                    index_data = data[i];
+
+                    // If this is a category, switch it to the current
+                    data_match = index_data.match(/^([^\s].+)\:$/);
+                    if(data_match !== null) {
+                        current_cat = data_match[1];
+                    }
+                    else {
+                        // If this matches the lookup, push the current cat onto the return array
+                        data_match = index_data.match(lookup_re);
+                        if(data_match !== null) {
+                            to_return[1].push("[" + current_cat + "](#category:" + current_cat + ")");
+                        }
+                    }
+                }
+            },
+            error: function() {
+                // Do nothing
+           }
+        });
+
+        // Return
+        return to_return;
+    }
+
     Wiki.preParse = function(data) {
+        // Parse spaces out of the links
+        data = Wiki.templateLinksParse(data);
+
         // Parse out the quick links
         data = Wiki.templateQuickLinkParse(data);
 
@@ -171,7 +276,16 @@ this.Wiki = {};
         Wiki.page_updating = false;
     }
 
+
     //  ******* TEMPLATES ******* \\
+    // Parse out the link spaces
+    // Convert [1]: #A B to [1]: #A%20B
+    Wiki.templateLinksParse = function(data) {
+        return data.replace(/^(\[\d+\]\: #)(.+)$/gm, function(match, m1, m2) {
+            return m1 + m2.replace(/\s+/g, "%20");
+        });
+    }
+
     // Parse out the quick link syntax
     // Convert [[foo]] to [foo](#foo)
     Wiki.templateQuickLinkParse = function(data) {
