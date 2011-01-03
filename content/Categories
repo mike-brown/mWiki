@@ -5,28 +5,33 @@ Categories are used to group similar pages together. Categories can belong to ot
 giving a hierachical structure. Categories can also have their own content, such as shown on the
 [Categories][1] category page.
 
-Categories are used in two ways: to add a page of content or a sub-category into a category, and
-to control the content of the category itself.
+Defining a category
+-------------------
+
+Categories are content files that are placed under the categories folder. They can contain content
+of their own, and can use templates in the same way that content files can.
+
+In addition to this, an entry for the category should be made in the categories.yml file. This entry
+should be on a new line, and be in the form "{Category Name}:", with no indentation.
 
 Adding a page to a category
 ---------------------------
 
-To add a given page into a category, you need to add a line to the content document for each
-category that the page is a member of. This line is in the form of:
+To add pages to a category, edit the categories.yml file. Find the heading for the category you wish
+to add the page to and add a line for the page name, indented by at least one space. If it is a
+category you are adding to another, include a "!" before the category name.
 
-!!CODE
-*category:{Name}*
-!!ENDCODE
+Example
+-------
 
-where {Name} is the name of the category to add the page to. There should be nothing but this
-definition on the line
+In the example below, the category "Foo" includes the content page "Bar" and also the category
+"Bar", and the category "Bar" includes the category "Baz".
 
-The link can appear at any point in the document, but are generally grouped. However, this also
-means that templates can be used to add pages to categories automatically.
-
-Defining a category
--------------------
-
+Foo:
+  Bar
+  !Bar
+Bar:
+  !Baz
 
 
 [1]: #category:Categories
