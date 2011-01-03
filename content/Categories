@@ -28,10 +28,14 @@ In the example below, the category "Foo" includes the content page "Bar" and als
 "Bar", and the category "Bar" includes the category "Baz".
 
 Foo:
-  Bar
-  !Bar
+
+&nbsp;&nbsp;&nbsp;&nbsp;Bar
+
+&nbsp;&nbsp;&nbsp;&nbsp;!Bar
+
 Bar:
-  !Baz
+
+&nbsp;&nbsp;&nbsp;&nbsp;!Baz
 
 
 [1]: #category:Categories
