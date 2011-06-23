@@ -12,3 +12,14 @@ The file to redirect from must contain a single line of the instruction to redir
 REDIRECT: #**page_name**
 
 where **page_name** is the name of the page to redirect to.
+
+Example
+-------
+
+The page [[Redirected]] contains a redirect statement back to this page.
+
+Warning
+-------
+
+Beware of redirect loops - there is currently no detection of redirect loops, meaning that the page
+will continue to load indefinitly.

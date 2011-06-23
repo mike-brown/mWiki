@@ -1,10 +1,8 @@
-html
-{
+html{
   background-color: grey;
 }
 
-body
-{
+body{
   font-family: sans-serif;
   font-size: 14px;
   width: 740px;
@@ -13,11 +11,9 @@ body
   margin-left: auto;
   margin-right: auto;
   margin-top: 5px;
-
 }
 
-#header
-{
+#header{
   font-size: 30px;
   font-weight: bold;
   padding: 10px;
@@ -25,47 +21,41 @@ body
   border: ridge 3px grey;
 }
 
-#header a
-{
+#header a{
   text-decoration:none;
   color:black;
 }
 
-#header a:visited
-{
+#header a:visited{
   color:black;
 }
 
-#inner_content
-{
+#inner_content{
   padding: 0px 40px;
   margin: 10px 0px;
 }
 
-#inner_content h1
-{
+#inner_content h1{
   font-size: 24px;
   font-weight: bold;
+  margin: 10px 0px
 }
 
-#inner_content p, #inner_content a
-{
+#inner_content p, #inner_content a{
   line-height: 140%;
   margin: 0px 0px 10px 0px;
 }
 
-#inner_content ul
-{
+#inner_content ul{
   margin-left: 20px;
 }
 
-h2
-{
-  margin: 10px;
+#inner_content h2{
+  margin: 10px 0px;
+  font-size: 16px;
 }
 
-#infobox
-{
+#infobox{
   float: right;
   width: 280px;
   border: 2px solid black;
@@ -75,8 +65,7 @@ h2
   margin: 0px 10px 10px 10px;
 }
 
-#infobox dd
-{
+#infobox dd{
   position: relative;
   top: -16px;
   right: 0px;
@@ -84,20 +73,17 @@ h2
   text-align: right;
 }
 
-#infobox dl
-{
+#infobox dl{
   margin: 0px;
   margin-bottom: -16px;
 }
 
-#infobox dt
-{
+#infobox dt{
   width: 100px;
   font-weight: bold;
 }
 
-#categories
-{
+#categories{
   border: 1px solid black;
   padding: 0px;
   margin: 0px 30px;
@@ -105,13 +91,11 @@ h2
   padding: 5px;
 }
 
-#categories ul
-{
+#categories ul{
   padding-left: 10px;
 }
 
-#categories li
-{
+#categories li{
   display: inline;
   margin-right: 10px;
   padding-right: 10px;
