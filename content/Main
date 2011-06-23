@@ -5,10 +5,11 @@ part of the current URL.
 Core functions
 --------------
 
-[[Categories]]
+* [[Categories]]
 
 Templates
 ---------
 
 * [[Infobox]]
 * [[Quick Link]]
+* [[Redirection]]
