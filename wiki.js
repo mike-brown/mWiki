@@ -155,11 +155,10 @@ this.Wiki = {};
               index_data = data[i];
 
               // Check if it has indentation
-              data_match = index_data.match(/^\s+(.*)$/);
+              data_match = index_data.match(/^\s+(.*)\r?$/);
 
               // If there was no match, we break from the loop
-              if(data_match == null)
-              {
+              if(data_match == null) {
                 break;
               } else {
                 // There is data here, so build a link to it
@@ -194,7 +193,7 @@ this.Wiki = {};
           index_data = data[i];
 
           // If this is a category, switch it to the current
-          data_match = index_data.match(/^([^\s].+)\:$/);
+          data_match = index_data.match(/^([^\s].+)\:\r?$/);
           if(data_match !== null) {
             current_cat = data_match[1];
           } else {
